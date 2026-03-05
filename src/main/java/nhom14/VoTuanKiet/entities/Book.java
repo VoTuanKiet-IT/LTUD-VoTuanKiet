@@ -46,6 +46,10 @@ public class Book {
     @ToString.Exclude 
     private Category category; 
  
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL) 
+    @ToString.Exclude 
+    private List<ItemInvoice> itemInvoices = new ArrayList<>();
+
 
     @Override 
     public boolean equals(Object o) { 
