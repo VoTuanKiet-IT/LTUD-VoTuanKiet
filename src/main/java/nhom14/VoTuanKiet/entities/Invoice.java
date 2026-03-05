@@ -34,7 +34,12 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL) 
     @ToString.Exclude 
     private List<ItemInvoice> itemInvoices = new ArrayList<>(); 
- 
+    
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "user_id", referencedColumnName = "id") 
+    @ToString.Exclude 
+    private User user; 
+
     @Override 
     public boolean equals(Object o) { 
         if (this == o) return true; 
