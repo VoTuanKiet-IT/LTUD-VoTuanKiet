@@ -4,8 +4,6 @@ import nhom14.VoTuanKiet.entities.Book;
 import nhom14.VoTuanKiet.repositories.IBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.springframework.data.domain.PageRequest; 
-import org.springframework.data.domain.Sort; 
 import org.springframework.stereotype.Service; 
 import org.springframework.transaction.annotation.Isolation; 
 import org.springframework.transaction.annotation.Transactional; 
@@ -32,6 +30,11 @@ public class BookService {
      public void addBook(Book book) { 
         bookRepository.save(book); 
     }
+
+    public List<Book> searchBook(String keyword) { 
+        return bookRepository.searchBook(keyword); 
+    } 
+
     public void updateBook(@NotNull Book book) { 
         Book existingBook = bookRepository.findById(book.getId()) 
                                         .orElse(null); 

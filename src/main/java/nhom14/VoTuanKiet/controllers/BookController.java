@@ -97,7 +97,26 @@ public class BookController {
         book -> bookService.deleteBookById(id), 
         () -> { throw new IllegalArgumentException("Book not found"); }); 
         return "redirect:/books"; 
+    }
+
+    @GetMapping("/search") 
+    public String searchBook( 
+            @NotNull Model model, 
+            @RequestParam String keyword, 
+            @RequestParam(defaultValue = "0") Integer pageNo, 
+            @RequestParam(defaultValue = "20") Integer pageSize, 
+            @RequestParam(defaultValue = "id") String sortBy) { 
+        model.addAttribute("books", bookService.searchBook(keyword)); 
+        model.addAttribute("currentPage", pageNo); 
+        model.addAttribute("totalPages", 
+                bookService 
+                        .getAllBooks(pageNo, pageSize, sortBy) 
+                        .size() / pageSize); 
+        model.addAttribute("categories", 
+    categoryService.getAllCategories()); 
+        return "book/list"; 
     } 
+
  
     @PostMapping("/add-to-cart") 
     public String addToCart(HttpSession session, 
