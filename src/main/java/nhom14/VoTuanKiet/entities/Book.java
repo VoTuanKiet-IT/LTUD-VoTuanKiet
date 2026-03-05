@@ -1,15 +1,48 @@
 package nhom14.VoTuanKiet.entities;
 
-import lombok.AllArgsConstructor; 
-import lombok.Data; 
-import lombok.NoArgsConstructor; 
-@Data 
+import jakarta.persistence.*; 
+import lombok.*; 
+import org.hibernate.Hibernate;
+
+import java.util.Objects; 
+ 
+@Getter 
+@Setter 
+@ToString 
+@RequiredArgsConstructor 
 @AllArgsConstructor 
-@NoArgsConstructor 
-    public class Book { 
-    private Long id; 
-    private String title; 
-    private String author; 
+@Entity 
+@Builder 
+@Table(name = "book")
+public class Book { 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     
+    private Long id;
+
+    @Column(name = "title", length = 50, nullable = false) 
+    private String title;
+    
+    @Column(name = "author", length = 50, nullable = false) 
+    private String author;
+
+    @Column(name = "price") 
     private Double price; 
-    private String category; 
+    
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "category_id", referencedColumnName = "id") 
+    @ToString.Exclude 
+    private Category category;
+
+     @Override 
+    public boolean equals(Object o) { 
+        if (this == o) return true; 
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false; 
+        Book book = (Book) o; 
+        return getId() != null && Objects.equals(getId(),book.getId()); 
+    } 
+ 
+    @Override 
+    public int hashCode() { 
+        return getClass().hashCode(); 
+    }
 } 
