@@ -46,22 +46,58 @@ public class BookController {
     } 
  
     @PostMapping("/add") 
-public String addBook( 
-        @Valid @ModelAttribute("book") Book book, 
-        @NotNull BindingResult bindingResult, 
-        Model model) { 
-    if (bindingResult.hasErrors()) { 
-        var errors = bindingResult.getAllErrors() 
-                .stream() 
-                .map(DefaultMessageSourceResolvable::getDefaultMessage) 
-                .toArray(String[]::new); 
-        model.addAttribute("errors", errors); 
+    public String addBook( 
+            @Valid @ModelAttribute("book") Book book, 
+            @NotNull BindingResult bindingResult, 
+            Model model) { 
+        if (bindingResult.hasErrors()) { 
+            var errors = bindingResult.getAllErrors() 
+                    .stream() 
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage) 
+                    .toArray(String[]::new); 
+            model.addAttribute("errors", errors); 
+            model.addAttribute("categories", categoryService.getAllCategories()); 
+            return "book/add"; 
+        } 
+        bookService.addBook(book); 
+        return "redirect:/books"; 
+    }
+
+    @GetMapping("/edit/{id}") 
+    public String editBookForm(@NotNull Model model, @PathVariable long id) 
+    { 
+        var book = bookService.getBookById(id); 
+        model.addAttribute("book", book.orElseThrow(() -> new     IllegalArgumentException("Book not found"))); 
         model.addAttribute("categories", categoryService.getAllCategories()); 
-        return "book/add"; 
+        return "book/edit"; 
     } 
-    bookService.addBook(book); 
-    return "redirect:/books"; 
-} 
+ 
+    @PostMapping("/edit") 
+    public String editBook(@Valid @ModelAttribute("book") Book book, 
+                        @NotNull BindingResult bindingResult, 
+                        Model model) { 
+        if (bindingResult.hasErrors()) { 
+            var errors = bindingResult.getAllErrors() 
+                    .stream() 
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage) 
+                    .toArray(String[]::new); 
+            model.addAttribute("errors", errors); 
+            model.addAttribute("categories", categoryService.getAllCategories()); 
+            return "book/edit"; 
+        } 
+        bookService.updateBook(book); 
+        return "redirect:/books"; 
+    }
+
+
+    @GetMapping("/delete/{id}") 
+    public String deleteBook(@PathVariable long id) { 
+        bookService.getBookById(id) 
+        .ifPresentOrElse( 
+        book -> bookService.deleteBookById(id), 
+        () -> { throw new IllegalArgumentException("Book not found"); }); 
+        return "redirect:/books"; 
+    } 
  
     @PostMapping("/add-to-cart") 
     public String addToCart(HttpSession session, 

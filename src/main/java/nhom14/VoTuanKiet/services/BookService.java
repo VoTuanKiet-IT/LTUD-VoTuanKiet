@@ -34,12 +34,12 @@ public class BookService {
     }
     public void updateBook(@NotNull Book book) { 
         Book existingBook = bookRepository.findById(book.getId()) 
-                                          .orElse(null); 
+                                        .orElse(null); 
         Objects.requireNonNull(existingBook).setTitle(book.getTitle()); 
         existingBook.setAuthor(book.getAuthor()); 
         existingBook.setPrice(book.getPrice()); 
         existingBook.setCategory(book.getCategory()); 
-        bookRepository.save(existingBook);  
+        bookRepository.save(existingBook); 
     } 
  
     public void deleteBookById(Long id) { 
