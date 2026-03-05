@@ -48,4 +48,10 @@ public class BookController {
         bookService.updateBook(book); 
         return "redirect:/books"; 
     }
+    @GetMapping("/delete/{id}") 
+    public String deleteBook(@PathVariable long id) { 
+        if (bookService.getBookById(id).isPresent()) 
+            bookService.deleteBookById(id); 
+        return "redirect:/books"; 
+    }
 } 
