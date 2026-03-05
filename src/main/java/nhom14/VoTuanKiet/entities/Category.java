@@ -1,11 +1,13 @@
 package nhom14.VoTuanKiet.entities;
  
-import jakarta.persistence.*; 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank; 
+import jakarta.validation.constraints.Size;
 import lombok.*; 
 import org.hibernate.Hibernate; 
  
 import java.util.ArrayList; 
-import java.util.List;
+import java.util.List; 
  
 import java.util.Objects; 
  
@@ -23,7 +25,9 @@ public class Category {
     @Column(name = "id") 
     private Long id; 
  
-    @Column(name = "name", length = 50, nullable = false) 
+    @Column(name = "name", length = 50, nullable = false)
+    @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters") 
+    @NotBlank(message = "Name must not be blank")
     private String name; 
  
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL) 
