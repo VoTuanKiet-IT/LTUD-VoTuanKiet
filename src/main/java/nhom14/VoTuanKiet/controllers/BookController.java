@@ -35,4 +35,17 @@ public class BookController {
             bookService.addBook(book); 
         return "redirect:/books"; 
     }
+    @GetMapping("/edit/{id}") 
+    public String editBookForm(@NotNull Model model, @PathVariable long id) 
+    { 
+        var book = bookService.getBookById(id).orElse(null); 
+        model.addAttribute("book", book != null ? book : new Book()); 
+        return "book/edit"; 
+    } 
+    
+    @PostMapping("/edit") 
+    public String editBook(@ModelAttribute("book") Book book) { 
+        bookService.updateBook(book); 
+        return "redirect:/books"; 
+    }
 } 
